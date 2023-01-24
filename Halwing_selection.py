@@ -66,7 +66,7 @@ def sum_ranking_method(dataset, choosen_vars):
 
     dataset['Sum'] = dataset[Choosen_vars].sum(axis = 1)
     dataset['Sum_scaled'] = dataset['Sum'] -  dataset['Sum'].min()
-    dataset['Sum_scaled_%'] = dataset['Sum_scaled']/ dataset['Sum_scaled'].max()
+    dataset['Sum_scaled_%'] = (dataset['Sum_scaled']/ dataset['Sum_scaled'].max()) * 100
     
     return dataset.drop(choosen_vars , axis = 1).sort_values("Sum_scaled_%" , ascending = False)
 
