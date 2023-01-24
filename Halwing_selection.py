@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
 
 
 
@@ -41,9 +43,38 @@ def find_variables(corr, method):
         print(Hellwig_Selection(corr,method = method))
         final_variables.append(Hellwig_Selection(corr,method = method)[0])
         corr = corr.drop(Hellwig_Selection(corr,method = method)[1],axis=1).drop(Hellwig_Selection(corr,method = method)[1],axis=0)
+
     return final_variables
+
+#Standard Scaler on prepared dataset
+
+def standard_scaler(dataset, vars_to_stanard = []):
+
+    ct = ColumnTransformer([('Name', StandardScaler(), vars_to_stanard )], remainder='passthrough')
+    Standard = ct.fit_transform(dataset)
+    Standarized_data = pd.DataFrame(Standard, columns= dataset.columns)
+    
+    return Standarized_data
+
+# Stimulation of variables (only on Standarized variables!)
+def Stimulation_process(dataset , list_of_destimulation = []):
+    for i in list_of_destimulation:
+        dataset[i] = dataset[i] * (-1)
+    return dataset
+
+def sum_ranking_method(dataset, choosen_vars):
+
+    dataset['Sum'] = dataset[Choosen_vars].sum(axis = 1)
+    dataset['Sum_scaled'] = dataset['Sum'] -  dataset['Sum'].min()
+    dataset['Sum_scaled_%'] = dataset['Sum_scaled']/ dataset['Sum_scaled'].max()
+    
+    return dataset.drop(choosen_vars , axis = 1).sort_values("Sum_scaled_%" , ascending = False)
+
 
 
 #Example of Use 
 
-find_variables(corr , "T_student")
+#find_variables(Correlation matrix from the dataset  , One of the method)
+#standard_scaler(dataset , choosen vars from previous algorithm)
+#Stimulation_process(dataset, list_of_destimulation= ['var1', 'var2' , 'var3'] as a list destimulated variables)
+#sum_ranking_method(Standarized_data , Choosen_vars)
