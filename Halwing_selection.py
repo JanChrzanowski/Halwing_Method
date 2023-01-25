@@ -70,6 +70,18 @@ def sum_ranking_method(dataset, choosen_vars):
     
     return dataset.drop(choosen_vars , axis = 1).sort_values("Sum_scaled_%" , ascending = False)
 
+def Group_STD(x,y,z):
+    
+    # x = value of s y = mean of s z = std of S 
+    if  x < y - z:
+        return "G1"
+    if y > x > y - z:
+        return "G2"
+    if y + z > x> y:
+        return "G3"
+    if x > y + z:
+        return "G4"
+
 
 
 #Example of Use 
